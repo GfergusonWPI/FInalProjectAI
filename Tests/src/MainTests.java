@@ -139,11 +139,11 @@ public class MainTests {
         System.out.println(fileName + ": Finished Images");
     }
     public static void main(String[] args){
-        String tempPath = "C:\\Users\\Jordan\\Desktop\\sinwave.wav";
+        String tempPath = "blues.00000.wav";
         String tempOutput = "Spectrograms\\";
         try {
             Spectrogram s = new Spectrogram(tempPath, true);
-            generateSpectros(s, tempOutput, "sinwave.wav");
+            generateSpectros(s, tempOutput, tempPath);
 
         } catch (IOException e) {
             e.printStackTrace();
