@@ -33,7 +33,7 @@ public class MainTests {
                 System.out.println(wavs[fileCount].getName());
                 Spectrogram s = new Spectrogram(genrePath+genreFolder+"\\"+wavs[fileCount].getName(), true);
 
-                generateSpectros(s, destination+genreFolder+"\\", wavs[fileCount].getName());
+                generateSpectros(s, destination+genreFolder+"\\", wavs[fileCount].getName(), false);
 
             }
 
@@ -64,7 +64,7 @@ public class MainTests {
         }
     }
 
-    public static void generateSpectros(Spectrogram s, String outputPath, String fileName) throws IOException {
+    public static void generateSpectros(Spectrogram s, String outputPath, String fileName, boolean addFull) throws IOException {
         double[] data = s.getByteArray();
         System.out.println(fileName + ": Finished Reading");
         int fullLength = data.length;
@@ -136,16 +136,32 @@ public class MainTests {
             File outputfile = new File(outputPath + fileName+"-"+a+".png");
             ImageIO.write(image, "png", outputfile);
         }
+
+        if (addFull){
+            BufferedImage image = new BufferedImage(nX, nY, BufferedImage.TYPE_INT_RGB);
+            double ratio;
+            for (int x = 0; x < nX; x++){
+                for (int y = 0; y < nY; y++){
+                    ratio = plotData[x][y];
+                    Color newColor = getColor(1.0-ratio);
+                    image.setRGB(x, y, newColor.getRGB());
+                }
+            }
+
+            File outputfile = new File(outputPath + "Full-" + fileName + ".png");
+            ImageIO.write(image, "png", outputfile);
+        }
         System.out.println(fileName + ": Finished Images");
     }
     public static void main(String[] args){
-        String tempPath = "blues.00000.wav";
-        String tempOutput = "Spectrograms\\";
-        try {
-            Spectrogram s = new Spectrogram(tempPath, true);
-            generateSpectros(s, tempOutput, tempPath);
 
-        } catch (IOException e) {
+    }
+
+    public static void getSpectroFromFile(String filePath, String fileName){
+        try{
+            Spectrogram s = new Spectrogram(filePath, true);
+            generateSpectros(s, "spectrograms\\", fileName, true);
+        } catch(IOException e){
             e.printStackTrace();
         }
     }
